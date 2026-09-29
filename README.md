@@ -85,7 +85,7 @@ The main objective of MEDI CLEAR AI is to:
 
 
 
-🔎 Hybrid RAG
+## 🔎 Hybrid RAG
 
 MEDI CLEAR AI uses a hybrid retrieval approach.
 
@@ -118,7 +118,7 @@ The BM25 and Qdrant rankings are combined using Reciprocal Rank Fusion (RRF).
 
 The highest-ranked document after fusion is selected as the Top-1 context.
 
-🤖 Large Language Model
+## 🤖 Large Language Model
 
 The project uses:
 
@@ -135,7 +135,7 @@ Provide a short and direct response
 For general insurance questions, the system directly uses Qwen without retrieving patient records.
 
 
-🔄 RAG Workflow
+## 🔄 RAG Workflow
 User Question
       ↓
 Query Classification
@@ -154,7 +154,7 @@ Qwen2.5-3B-Instruct
       ↓
 Clean Answer
 
-🗂️ Dataset
+## 🗂️ Dataset
 
 The project uses a JSON-based dataset containing:
 
@@ -184,7 +184,7 @@ Claim timeline
 
 The dataset is intended for demonstration and development purposes.
 
-💬 Example Questions
+# 💬 Example Questions
 Patient Queries
 What is the claim status for Priya Sharma?
 
@@ -215,7 +215,7 @@ What is copay in health insurance?
 What does claim pending mean?
 
 What is reimbursement in health insurance?
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 Technology	Purpose
 Python	Core development
 Streamlit	Web application
@@ -279,7 +279,7 @@ Unknown patient/policy queries
 
 The application is designed to avoid generating patient-specific information when it is not present in the available records.
 
-🚀 Future Improvements
+## 🚀 Future Improvements
 
 Possible future improvements include:
 

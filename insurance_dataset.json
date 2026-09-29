@@ -1,0 +1,1293 @@
+{
+  "dataset_name": "MEDI_CLEAR_AI_INSURANCE_BILLING",
+  "dataset_version": "2.0",
+  "description": "Synthetic single-hospital patient, billing, claim, and insurance policy records for a Hybrid RAG demonstration.",
+  "data_scope": "Internal billing and insurance verification for one hospital",
+  "patients": [
+    {
+      "patient_id": "PAT001",
+      "name": "Aarav Mehta",
+      "age": 32,
+      "gender": "Male",
+      "admission_date": "2026-01-08",
+      "discharge_date": "2026-01-13",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Appendectomy",
+      "policy_id": "POL001",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 64750,
+        "consultation": 7770,
+        "room_rent": 15540,
+        "pharmacy": 16835,
+        "diagnostics": 24605,
+        "total_bill_amount": 129500
+      },
+      "claim": {
+        "claim_id": "CLM001",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-01-08",
+        "approval_date": "2026-01-21"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 110000,
+        "patient_payable_amount": 19500
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT002",
+      "name": "Ananya Rao",
+      "age": 29,
+      "gender": "Female",
+      "admission_date": "2026-01-21",
+      "discharge_date": "2026-01-25",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "C-section",
+      "policy_id": "POL002",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 70250,
+        "consultation": 8430,
+        "room_rent": 16860,
+        "pharmacy": 18265,
+        "diagnostics": 26695,
+        "total_bill_amount": 140500
+      },
+      "claim": {
+        "claim_id": "CLM002",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-01-21",
+        "approval_date": "2026-02-02"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 126450,
+        "patient_payable_amount": 14050
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT003",
+      "name": "Vikram Nair",
+      "age": 58,
+      "gender": "Male",
+      "admission_date": "2026-02-03",
+      "discharge_date": "2026-02-11",
+      "length_of_stay_days": 8,
+      "diagnosis_treatment_type": "Cardiac Angioplasty",
+      "policy_id": "POL003",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 122000,
+        "consultation": 14640,
+        "room_rent": 29280,
+        "pharmacy": 31720,
+        "diagnostics": 46360,
+        "total_bill_amount": 244000
+      },
+      "claim": {
+        "claim_id": "CLM003",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-02-03",
+        "approval_date": "2026-02-19"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 200000,
+        "patient_payable_amount": 44000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT004",
+      "name": "Priya Sharma",
+      "age": 41,
+      "gender": "Female",
+      "admission_date": "2026-02-14",
+      "discharge_date": "2026-02-19",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Gallbladder Surgery",
+      "policy_id": "POL004",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 67500,
+        "consultation": 8100,
+        "room_rent": 16200,
+        "pharmacy": 17550,
+        "diagnostics": 25650,
+        "total_bill_amount": 135000
+      },
+      "claim": {
+        "claim_id": "CLM004",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-02-14",
+        "approval_date": "2026-02-27"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 114750,
+        "patient_payable_amount": 20250
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT005",
+      "name": "Rohan Kapoor",
+      "age": 46,
+      "gender": "Male",
+      "admission_date": "2026-03-02",
+      "discharge_date": "2026-03-07",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Knee Replacement",
+      "policy_id": "POL005",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 105000,
+        "consultation": 12600,
+        "room_rent": 25200,
+        "pharmacy": 27300,
+        "diagnostics": 39900,
+        "total_bill_amount": 210000
+      },
+      "claim": {
+        "claim_id": "CLM005",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-03-02",
+        "approval_date": "2026-03-15"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 150000,
+        "patient_payable_amount": 60000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT006",
+      "name": "Sneha Iyer",
+      "age": 35,
+      "gender": "Female",
+      "admission_date": "2026-03-18",
+      "discharge_date": "2026-03-22",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Normal Delivery",
+      "policy_id": "POL006",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 48500,
+        "consultation": 5820,
+        "room_rent": 11640,
+        "pharmacy": 12610,
+        "diagnostics": 18430,
+        "total_bill_amount": 97000
+      },
+      "claim": {
+        "claim_id": "CLM006",
+        "claim_status": "Pending",
+        "claim_stage": "Under Review",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Under verification",
+        "missing_documents": [
+          "Final insurer verification"
+        ],
+        "rejection_reason": null,
+        "submitted_date": "2026-03-18",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 77600,
+        "patient_payable_amount": 19400
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT007",
+      "name": "Karthik Reddy",
+      "age": 52,
+      "gender": "Male",
+      "admission_date": "2026-04-05",
+      "discharge_date": "2026-04-10",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Hernia Repair",
+      "policy_id": "POL007",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 62500,
+        "consultation": 7500,
+        "room_rent": 15000,
+        "pharmacy": 16250,
+        "diagnostics": 23750,
+        "total_bill_amount": 125000
+      },
+      "claim": {
+        "claim_id": "CLM007",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-04-05",
+        "approval_date": "2026-04-18"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 100000,
+        "patient_payable_amount": 25000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT008",
+      "name": "Meera Joshi",
+      "age": 63,
+      "gender": "Female",
+      "admission_date": "2026-04-20",
+      "discharge_date": "2026-04-28",
+      "length_of_stay_days": 8,
+      "diagnosis_treatment_type": "Cataract Surgery",
+      "policy_id": "POL008",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 59000,
+        "consultation": 7080,
+        "room_rent": 14160,
+        "pharmacy": 15340,
+        "diagnostics": 22420,
+        "total_bill_amount": 118000
+      },
+      "claim": {
+        "claim_id": "CLM008",
+        "claim_status": "Rejected",
+        "claim_stage": "Rejected",
+        "pre_authorization_status": "Rejected",
+        "documents_status": "Incomplete",
+        "missing_documents": [
+          "Medical necessity certificate"
+        ],
+        "rejection_reason": "Procedure did not meet the policy's medical-necessity requirement.",
+        "submitted_date": "2026-04-20",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 0,
+        "patient_payable_amount": 118000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT009",
+      "name": "Aditya Verma",
+      "age": 38,
+      "gender": "Male",
+      "admission_date": "2026-05-09",
+      "discharge_date": "2026-05-14",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Kidney Stone Surgery",
+      "policy_id": "POL009",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 69000,
+        "consultation": 8280,
+        "room_rent": 16560,
+        "pharmacy": 17940,
+        "diagnostics": 26220,
+        "total_bill_amount": 138000
+      },
+      "claim": {
+        "claim_id": "CLM009",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-05-09",
+        "approval_date": "2026-05-22"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 124200,
+        "patient_payable_amount": 13800
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT010",
+      "name": "Nisha Menon",
+      "age": 44,
+      "gender": "Female",
+      "admission_date": "2026-05-23",
+      "discharge_date": "2026-05-27",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Thyroid Surgery",
+      "policy_id": "POL010",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 60500,
+        "consultation": 7260,
+        "room_rent": 14520,
+        "pharmacy": 15730,
+        "diagnostics": 22990,
+        "total_bill_amount": 121000
+      },
+      "claim": {
+        "claim_id": "CLM010",
+        "claim_status": "Pending",
+        "claim_stage": "Under Review",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Under verification",
+        "missing_documents": [
+          "Final insurer verification"
+        ],
+        "rejection_reason": null,
+        "submitted_date": "2026-05-23",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 90750,
+        "patient_payable_amount": 30250
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT011",
+      "name": "Arjun Malhotra",
+      "age": 55,
+      "gender": "Male",
+      "admission_date": "2026-06-12",
+      "discharge_date": "2026-06-18",
+      "length_of_stay_days": 6,
+      "diagnosis_treatment_type": "Cardiac Bypass Surgery",
+      "policy_id": "POL003",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 125500,
+        "consultation": 15060,
+        "room_rent": 30120,
+        "pharmacy": 32630,
+        "diagnostics": 47690,
+        "total_bill_amount": 251000
+      },
+      "claim": {
+        "claim_id": "CLM011",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-06-12",
+        "approval_date": "2026-06-26"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 200000,
+        "patient_payable_amount": 51000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT012",
+      "name": "Divya Krishnan",
+      "age": 27,
+      "gender": "Female",
+      "admission_date": "2026-07-03",
+      "discharge_date": "2026-07-06",
+      "length_of_stay_days": 3,
+      "diagnosis_treatment_type": "Appendectomy",
+      "policy_id": "POL001",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 52750,
+        "consultation": 6330,
+        "room_rent": 12660,
+        "pharmacy": 13715,
+        "diagnostics": 20045,
+        "total_bill_amount": 105500
+      },
+      "claim": {
+        "claim_id": "CLM012",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-07-03",
+        "approval_date": "2026-07-14"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 89675,
+        "patient_payable_amount": 15825
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT013",
+      "name": "Rahul Sethi",
+      "age": 61,
+      "gender": "Male",
+      "admission_date": "2026-07-15",
+      "discharge_date": "2026-07-20",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Knee Replacement",
+      "policy_id": "POL005",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 112500,
+        "consultation": 13500,
+        "room_rent": 27000,
+        "pharmacy": 29250,
+        "diagnostics": 42750,
+        "total_bill_amount": 225000
+      },
+      "claim": {
+        "claim_id": "CLM013",
+        "claim_status": "Pending",
+        "claim_stage": "Under Review",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Under verification",
+        "missing_documents": [
+          "Final insurer verification"
+        ],
+        "rejection_reason": null,
+        "submitted_date": "2026-07-15",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 150000,
+        "patient_payable_amount": 75000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT014",
+      "name": "Kavya Nair",
+      "age": 31,
+      "gender": "Female",
+      "admission_date": "2026-07-28",
+      "discharge_date": "2026-08-01",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Normal Delivery",
+      "policy_id": "POL006",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 46000,
+        "consultation": 5520,
+        "room_rent": 11040,
+        "pharmacy": 11960,
+        "diagnostics": 17480,
+        "total_bill_amount": 92000
+      },
+      "claim": {
+        "claim_id": "CLM014",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-07-28",
+        "approval_date": "2026-08-09"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 73600,
+        "patient_payable_amount": 18400
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT015",
+      "name": "Manoj Kumar",
+      "age": 49,
+      "gender": "Male",
+      "admission_date": "2026-08-06",
+      "discharge_date": "2026-08-11",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Kidney Stone Surgery",
+      "policy_id": "POL009",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 71000,
+        "consultation": 8520,
+        "room_rent": 17040,
+        "pharmacy": 18460,
+        "diagnostics": 26980,
+        "total_bill_amount": 142000
+      },
+      "claim": {
+        "claim_id": "CLM015",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-08-06",
+        "approval_date": "2026-08-19"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 127800,
+        "patient_payable_amount": 14200
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT016",
+      "name": "Pooja Shah",
+      "age": 37,
+      "gender": "Female",
+      "admission_date": "2026-08-18",
+      "discharge_date": "2026-08-22",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Gallbladder Surgery",
+      "policy_id": "POL004",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 66000,
+        "consultation": 7920,
+        "room_rent": 15840,
+        "pharmacy": 17160,
+        "diagnostics": 25080,
+        "total_bill_amount": 132000
+      },
+      "claim": {
+        "claim_id": "CLM016",
+        "claim_status": "Rejected",
+        "claim_stage": "Rejected",
+        "pre_authorization_status": "Rejected",
+        "documents_status": "Incomplete",
+        "missing_documents": [
+          "Pre-authorization confirmation"
+        ],
+        "rejection_reason": "Required pre-authorization evidence was not available.",
+        "submitted_date": "2026-08-18",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 0,
+        "patient_payable_amount": 132000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT017",
+      "name": "Sanjay Rao",
+      "age": 57,
+      "gender": "Male",
+      "admission_date": "2026-08-25",
+      "discharge_date": "2026-08-31",
+      "length_of_stay_days": 6,
+      "diagnosis_treatment_type": "Cardiac Angioplasty",
+      "policy_id": "POL003",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 114000,
+        "consultation": 13680,
+        "room_rent": 27360,
+        "pharmacy": 29640,
+        "diagnostics": 43320,
+        "total_bill_amount": 228000
+      },
+      "claim": {
+        "claim_id": "CLM017",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-08-25",
+        "approval_date": "2026-09-08"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 200000,
+        "patient_payable_amount": 28000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT018",
+      "name": "Ishita Gupta",
+      "age": 68,
+      "gender": "Female",
+      "admission_date": "2026-09-02",
+      "discharge_date": "2026-09-06",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Cataract Surgery",
+      "policy_id": "POL008",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 48000,
+        "consultation": 5760,
+        "room_rent": 11520,
+        "pharmacy": 12480,
+        "diagnostics": 18240,
+        "total_bill_amount": 96000
+      },
+      "claim": {
+        "claim_id": "CLM018",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-02",
+        "approval_date": "2026-09-14"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 76800,
+        "patient_payable_amount": 19200
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT019",
+      "name": "Vivek Anand",
+      "age": 43,
+      "gender": "Male",
+      "admission_date": "2026-09-05",
+      "discharge_date": "2026-09-10",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Hernia Repair",
+      "policy_id": "POL007",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 59000,
+        "consultation": 7080,
+        "room_rent": 14160,
+        "pharmacy": 15340,
+        "diagnostics": 22420,
+        "total_bill_amount": 118000
+      },
+      "claim": {
+        "claim_id": "CLM019",
+        "claim_status": "Pending",
+        "claim_stage": "Under Review",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Under verification",
+        "missing_documents": [
+          "Final insurer verification"
+        ],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-05",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 94400,
+        "patient_payable_amount": 23600
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT020",
+      "name": "Neha Bansal",
+      "age": 30,
+      "gender": "Female",
+      "admission_date": "2026-09-08",
+      "discharge_date": "2026-09-12",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "C-section",
+      "policy_id": "POL002",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 79000,
+        "consultation": 9480,
+        "room_rent": 18960,
+        "pharmacy": 20540,
+        "diagnostics": 30020,
+        "total_bill_amount": 158000
+      },
+      "claim": {
+        "claim_id": "CLM020",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-08",
+        "approval_date": "2026-09-20"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 142200,
+        "patient_payable_amount": 15800
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT021",
+      "name": "Suresh Pillai",
+      "age": 59,
+      "gender": "Male",
+      "admission_date": "2026-09-10",
+      "discharge_date": "2026-09-17",
+      "length_of_stay_days": 7,
+      "diagnosis_treatment_type": "Cardiac Bypass Surgery",
+      "policy_id": "POL003",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 142500,
+        "consultation": 17100,
+        "room_rent": 34200,
+        "pharmacy": 37050,
+        "diagnostics": 54150,
+        "total_bill_amount": 285000
+      },
+      "claim": {
+        "claim_id": "CLM021",
+        "claim_status": "Rejected",
+        "claim_stage": "Rejected",
+        "pre_authorization_status": "Rejected",
+        "documents_status": "Incomplete",
+        "missing_documents": [
+          "Additional cardiac procedure documentation"
+        ],
+        "rejection_reason": "Required procedure documentation was incomplete.",
+        "submitted_date": "2026-09-10",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 0,
+        "patient_payable_amount": 285000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT022",
+      "name": "Ritu Agarwal",
+      "age": 34,
+      "gender": "Female",
+      "admission_date": "2026-09-12",
+      "discharge_date": "2026-09-16",
+      "length_of_stay_days": 4,
+      "diagnosis_treatment_type": "Normal Delivery",
+      "policy_id": "POL006",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 44000,
+        "consultation": 5280,
+        "room_rent": 10560,
+        "pharmacy": 11440,
+        "diagnostics": 16720,
+        "total_bill_amount": 88000
+      },
+      "claim": {
+        "claim_id": "CLM022",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-12",
+        "approval_date": "2026-09-24"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 70400,
+        "patient_payable_amount": 17600
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT023",
+      "name": "Deepak Joshi",
+      "age": 39,
+      "gender": "Male",
+      "admission_date": "2026-09-14",
+      "discharge_date": "2026-09-19",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Thyroid Surgery",
+      "policy_id": "POL010",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 58000,
+        "consultation": 6960,
+        "room_rent": 13920,
+        "pharmacy": 15080,
+        "diagnostics": 22040,
+        "total_bill_amount": 116000
+      },
+      "claim": {
+        "claim_id": "CLM023",
+        "claim_status": "Approved",
+        "claim_stage": "Settled",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Complete",
+        "missing_documents": [],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-14",
+        "approval_date": "2026-09-27"
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 87000,
+        "patient_payable_amount": 29000
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    },
+    {
+      "patient_id": "PAT024",
+      "name": "Swati Verma",
+      "age": 47,
+      "gender": "Female",
+      "admission_date": "2026-09-16",
+      "discharge_date": "2026-09-21",
+      "length_of_stay_days": 5,
+      "diagnosis_treatment_type": "Appendectomy",
+      "policy_id": "POL001",
+      "room_category": "Private Room",
+      "network_status": "In-network",
+      "billing_details": {
+        "surgery": 56000,
+        "consultation": 6720,
+        "room_rent": 13440,
+        "pharmacy": 14560,
+        "diagnostics": 21280,
+        "total_bill_amount": 112000
+      },
+      "claim": {
+        "claim_id": "CLM024",
+        "claim_status": "Pending",
+        "claim_stage": "Under Review",
+        "pre_authorization_status": "Approved",
+        "documents_status": "Under verification",
+        "missing_documents": [
+          "Final insurer verification"
+        ],
+        "rejection_reason": null,
+        "submitted_date": "2026-09-16",
+        "approval_date": null
+      },
+      "claim_outcome": {
+        "insurance_covered_amount": 95200,
+        "patient_payable_amount": 16800
+      },
+      "verification_flags": {
+        "bill_matches_claim_total": true,
+        "policy_linked": true,
+        "patient_responsibility_calculated": true
+      }
+    }
+  ],
+  "policies": [
+    {
+      "policy_id": "POL001",
+      "policy_name": "Standard HealthPlus Insurance",
+      "coverage_limit": 150000,
+      "reimbursement_percentage": 85,
+      "deductible": 0,
+      "copay_percentage": 15,
+      "room_rent_limit_per_day": 6000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "General Surgery",
+        "Day Care"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Self-inflicted injuries"
+      ],
+      "claim_timeline": "7-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Doctor certificate",
+        "Prescription",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL002",
+      "policy_name": "Corporate HealthPlus Maternity",
+      "coverage_limit": 200000,
+      "reimbursement_percentage": 90,
+      "deductible": 0,
+      "copay_percentage": 10,
+      "room_rent_limit_per_day": 8000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 90 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Maternity",
+        "Obstetrics"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Experimental treatment"
+      ],
+      "claim_timeline": "7-12 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Maternity records",
+        "Doctor certificate",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL003",
+      "policy_name": "Premium CardiacCare Insurance",
+      "coverage_limit": 300000,
+      "reimbursement_percentage": 90,
+      "deductible": 0,
+      "copay_percentage": 10,
+      "room_rent_limit_per_day": 10000,
+      "pre_post_treatment_coverage": "60 days pre-treatment and 90 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Cardiology",
+        "Cardiac Surgery",
+        "Angioplasty"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Routine health checkups"
+      ],
+      "claim_timeline": "10-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Cardiac test reports",
+        "Doctor certificate",
+        "Procedure details"
+      ]
+    },
+    {
+      "policy_id": "POL004",
+      "policy_name": "Family Secure Health Plan",
+      "coverage_limit": 150000,
+      "reimbursement_percentage": 85,
+      "deductible": 0,
+      "copay_percentage": 15,
+      "room_rent_limit_per_day": 7000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "General Surgery",
+        "Gastroenterology"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Dental treatment without hospitalization",
+        "Non-medical expenses"
+      ],
+      "claim_timeline": "7-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Doctor certificate",
+        "Prescription",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL005",
+      "policy_name": "Employee Wellness Plus",
+      "coverage_limit": 150000,
+      "reimbursement_percentage": 80,
+      "deductible": 5000,
+      "copay_percentage": 20,
+      "room_rent_limit_per_day": 6500,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Orthopedics",
+        "Joint Replacement",
+        "General Surgery"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Pre-existing conditions during waiting period"
+      ],
+      "claim_timeline": "10-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Surgery notes",
+        "Doctor certificate",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL006",
+      "policy_name": "Maternity Care Secure",
+      "coverage_limit": 100000,
+      "reimbursement_percentage": 80,
+      "deductible": 0,
+      "copay_percentage": 20,
+      "room_rent_limit_per_day": 6000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Maternity",
+        "Normal Delivery"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Voluntary termination without medical indication"
+      ],
+      "claim_timeline": "7-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Maternity records",
+        "Doctor certificate",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL007",
+      "policy_name": "Essential Family Insurance",
+      "coverage_limit": 125000,
+      "reimbursement_percentage": 80,
+      "deductible": 0,
+      "copay_percentage": 20,
+      "room_rent_limit_per_day": 6000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "General Surgery",
+        "Urology"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Routine health checkups"
+      ],
+      "claim_timeline": "7-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Doctor certificate",
+        "Prescription",
+        "Diagnostic reports"
+      ]
+    },
+    {
+      "policy_id": "POL008",
+      "policy_name": "SeniorCare Medical Shield",
+      "coverage_limit": 100000,
+      "reimbursement_percentage": 80,
+      "deductible": 2500,
+      "copay_percentage": 20,
+      "room_rent_limit_per_day": 5000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Ophthalmology",
+        "Cataract Surgery"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Vision correction not medically necessary"
+      ],
+      "claim_timeline": "10-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Ophthalmologist certificate",
+        "Diagnostic reports",
+        "Prescription"
+      ]
+    },
+    {
+      "policy_id": "POL009",
+      "policy_name": "CompleteCare Family Plan",
+      "coverage_limit": 150000,
+      "reimbursement_percentage": 90,
+      "deductible": 0,
+      "copay_percentage": 10,
+      "room_rent_limit_per_day": 7000,
+      "pre_post_treatment_coverage": "45 days pre-treatment and 75 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "Urology",
+        "General Surgery",
+        "Kidney Stone Treatment"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Experimental treatment"
+      ],
+      "claim_timeline": "7-12 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Doctor certificate",
+        "Diagnostic reports",
+        "Pharmacy bills"
+      ]
+    },
+    {
+      "policy_id": "POL010",
+      "policy_name": "SecureHealth Advantage",
+      "coverage_limit": 125000,
+      "reimbursement_percentage": 75,
+      "deductible": 5000,
+      "copay_percentage": 25,
+      "room_rent_limit_per_day": 6000,
+      "pre_post_treatment_coverage": "30 days pre-treatment and 60 days post-treatment",
+      "network_status": "In-network",
+      "covered_treatment_categories": [
+        "General Surgery",
+        "Endocrinology"
+      ],
+      "exclusions": [
+        "Cosmetic procedures",
+        "Non-medical expenses",
+        "Treatment outside approved network"
+      ],
+      "claim_timeline": "10-15 working days",
+      "required_documents": [
+        "Discharge summary",
+        "Hospital bills",
+        "Doctor certificate",
+        "Diagnostic reports",
+        "Prescription"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+streamlit
+torch
+transformers>=4.37.0
+accelerate
+sentence-transformers
+qdrant-client
+rank-bm25

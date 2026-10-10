@@ -1,0 +1,26 @@
+[
+  {
+    "question": "What is the claim status for Aarav Mehta?",
+    "answer": "Approved",
+    "context_precision": 0.9999999999,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.9295265307707313
+  },
+  {
+    "question": "What is the claim status for Ananya Rao?",
+    "answer": "Approved",
+    "context_precision": 0.9999999999,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.9295265307707313
+  },
+  {
+    "question": "What is the claim status for Vikram Nair?",
+    "answer": "Approved",
+    "context_precision": 0.9999999999,
+    "context_recall": null,
+    "faithfulness": null,
+    "answer_correctness": null
+  }
+]

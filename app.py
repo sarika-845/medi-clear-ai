@@ -1,5 +1,5 @@
 import streamlit as st
-from RAG import rag_query
+from agent import agent_query
 
 st.set_page_config(
     page_title="MEDI CLEAR AI",
@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 st.title("🏥 MEDI CLEAR AI")
-st.caption("Hospital Insurance & Billing Intelligence")
+st.caption("Agentic Hybrid RAG Insurance & Billing Assistant")
 
 query = st.text_input(
     "Enter your query",
@@ -19,11 +19,10 @@ if st.button("Generate Response"):
     if query.strip():
 
         with st.spinner("Generating response..."):
-            answer = rag_query(query)
+            answer = agent_query(query)
 
         st.subheader("Response")
         st.write(answer)
 
     else:
         st.warning("Please enter a question.")
-        

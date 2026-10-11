@@ -1,197 +1,302 @@
 # 🏥 MEDI CLEAR AI
 # MEDI CLEAR AI — Hybrid RAG for Hospital Billing Verification
 
-## 1. Problem Statement
+# 🏥 MEDI CLEAR AI
+### Agentic Hybrid RAG for Insurance and Hospital Billing Verification
 
-Hospital billing teams must check patient records, insurance policies, and claim information before answering billing-related questions. Manually searching through these records takes time and can lead to errors.
+MEDI CLEAR AI is an AI-powered insurance and hospital billing verification assistant built using **Hybrid Retrieval-Augmented Generation (RAG)**. It helps users retrieve patient claim information, understand insurance policies, identify missing documents, and obtain concise answers from a structured dataset.
 
-Traditional chatbots may also generate incorrect information when the required details are unavailable.
+The project combines keyword-based search, semantic search, and AI-generated responses to make insurance and billing information easier to access.
 
-## 2. Objective
+## 🚀 Live Application
 
-MEDI CLEAR AI is an AI-powered application that helps users retrieve patient claim information and insurance policy details through natural-language questions.
+- **Live Demo:** https://sarika-845-medi-clear-ai-app-n0xewy.streamlit.app
+- **GitHub Repository:** https://github.com/sarika-845/medi-clear-ai
 
-The objectives are to:
-- Retrieve relevant information from a structured insurance dataset.
-- Combine keyword-based and semantic search for better retrieval.
-- Generate concise answers grounded in retrieved information.
-- Reduce unsupported answers by validating patient and policy information.
+## 📌 Problem Statement
+
+Hospital billing and insurance verification can require staff to check patient records, claim statuses, insurance coverage, exclusions, and required documents manually.
+
+This process can be time-consuming and make it difficult to find the right information quickly.
+
+MEDI CLEAR AI addresses this problem by retrieving relevant patient and insurance information and generating concise responses to natural-language questions.
+
+## 🎯 Project Objectives
+
+- Retrieve patient claim information using natural-language questions.
+- Search insurance policies and coverage information.
+- Identify pending and rejected claims and their associated document requirements.
+- Combine keyword-based and semantic retrieval.
+- Generate answers grounded in retrieved information.
+- Handle unknown patients without inventing claim details.
 - Evaluate answer quality using RAGAS metrics.
 
-**Important:** This is a demonstration project using sample data, not a production hospital billing system.
+## ✨ Key Features
 
-## 3. How the Project Works
+- **Hybrid Retrieval:** Combines BM25 keyword retrieval with Qdrant vector search.
+- **Semantic Search:** Uses Sentence Transformers to represent text as embeddings.
+- **Insurance Verification:** Retrieves relevant insurance policy information.
+- **Claim Status Lookup:** Supports approved, pending, and rejected claim queries.
+- **Missing Document Identification:** Retrieves missing-document information from claim records.
+- **Agent Routing:** Uses an agent layer to route queries and apply validation logic.
+- **Grounded Responses:** Uses retrieved information to generate concise answers.
+- **RAGAS Evaluation:** Measures retrieval quality, faithfulness, and answer correctness.
+- **Interactive UI:** Provides a simple Streamlit interface.
+
+## 🧠 How It Works
+
+The application follows a retrieval-and-generation workflow.
+
+1. **Load the dataset:** Read patient, claim, billing, and insurance policy records from `insurance_dataset.json`.
+2. **Create embeddings:** Use the Sentence Transformers model `all-MiniLM-L6-v2` to represent text as numerical vectors.
+3. **Index information:** Store vectors in an in-memory Qdrant collection and prepare a BM25 keyword-search corpus.
+4. **Process the question:** Accept a natural-language question through the Streamlit interface.
+5. **Retrieve relevant information:** Use keyword and semantic retrieval to find relevant records.
+6. **Route and validate:** Apply the agent layer's routing and validation logic where appropriate.
+7. **Generate the response:** Use the retrieved context to produce a concise answer.
+8. **Display the result:** Return the response in the Streamlit application.
+
+## 🏗️ Architecture
 
 ```text
-User asks a question
-        ↓
-    Streamlit UI
-        ↓
-      agent.py
-        ↓
- Classify the question
-        ↓
- ┌───────────────┬───────────────┐
- │ Patient/Policy│ General Query │
- ↓               ↓
- Validate        Direct LLM
- required data   response
- ↓
- Hybrid Search
- BM25 + Qdrant
- ↓
- RRF Ranking
- ↓
- Retrieve Top 1
- relevant document
- ↓
- Qwen2.5 LLM
- ↓
- Clean answer
-        ↓
- Display in Streamlit
+              User Question
+                    |
+                    v
+             Streamlit UI
+                 app.py
+                    |
+                    v
+          Agent Routing & Validation
+                 agent.py
+                    |
+                    v
+             Hybrid Retrieval
+                RAG.py
+                    |
+           +--------+--------+
+           |                 |
+           v                 v
+     BM25 Retrieval     Qdrant Search
+     Keyword Search     Semantic Search
+           |                 |
+           +--------+--------+
+                    |
+                    v
+          Relevant Information
+                    |
+                    v
+          LLM Answer Generation
+                    |
+                    v
+            Final Response
+                    |
+                    v
+             Streamlit UI
 ```
 
-RAGAS evaluation is a separate process. It measures answer quality using test questions, reference answers, retrieved context, and generated answers.
+*The diagram represents the project's conceptual workflow. The exact execution order and components depend on the implementation in the source files.*
 
-## 4. Project Files and Why We Use Them
+## 🛠️ Technologies Used
 
-| File | Purpose |
+| Technology | Purpose |
 |---|---|
-| `app.py` | Provides the Streamlit user interface where users enter questions and view answers. |
-| `agent.py` | Classifies questions, validates patient information, and routes requests to the appropriate workflow. |
-| `RAG.py` | Implements hybrid retrieval, document ranking, and LLM-based answer generation. |
-| `insurance_dataset.json` | Stores the sample patient, claim, and insurance policy information used by the application. |
-| `evaluate_rag.py` | Runs the RAGAS evaluation on selected test cases. |
-| `ragas_results.json` | Stores completed evaluation scores so the evaluation can resume without discarding previous results. |
-| `requirements.txt` | Lists the Python packages required to run the project. |
-| `.gitignore` | Prevents unnecessary files, such as virtual environments and local secrets, from being committed to GitHub. |
+| Python | Application logic |
+| Streamlit | Interactive web interface |
+| Sentence Transformers | Text embeddings |
+| `all-MiniLM-L6-v2` | Embedding model |
+| Qdrant | Vector search |
+| BM25 (`rank_bm25`) | Keyword-based retrieval |
+| Hybrid RAG | Combines lexical and semantic retrieval |
+| Hugging Face Transformers | Language-model support |
+| RAGAS | RAG evaluation |
+| JSON | Patient, claim, and policy data |
+| Git and GitHub | Version control and source hosting |
 
-## 5. Technologies Used
+## 📂 Project Structure
 
-| Technology | Why it is used |
-|---|---|
-| Python | Implements the application logic. |
-| Streamlit | Creates the interactive web interface. |
-| BM25 | Finds documents using exact words and keyword relevance. |
-| Qdrant | Stores and searches vector representations of documents. |
-| Sentence Transformers | Converts text into numerical embeddings for semantic search. |
-| Reciprocal Rank Fusion (RRF) | Combines the rankings from BM25 and Qdrant into one ranked list. |
-| Qwen2.5-0.5B-Instruct | Generates natural-language answers using the retrieved context. |
-| RAGAS | Evaluates retrieval quality and answer quality. |
-| GitHub and Streamlit Cloud | Store the source code and host the web application. |
+```text
+medi_clear_rag_app/
+│
+├── app.py                  # Streamlit user interface
+├── agent.py                # Agent routing and validation
+├── RAG.py                  # Hybrid retrieval and generation
+├── insurance_dataset.json  # Patient, claim and policy records
+├── evaluate_rag.py         # RAGAS evaluation script
+├── ragas_results.json      # Saved evaluation results
+├── requirements.txt        # Python dependencies
+├── README.md               # Project documentation
+├── .gitignore              # Git exclusions
+└── venv/                   # Local Python environment
+```
 
-## 6. Why Hybrid RAG?
+The `venv/` folder is for local development and should not be committed to GitHub.
 
-A single search method has limitations.
+## 📊 Dataset
 
-- **BM25 — Keyword search:** Works well when the question contains an exact patient name, ID, claim term, or policy keyword.
-- **Qdrant — Semantic search:** Finds conceptually related text even when the wording differs.
-- **RRF — Rank fusion:** Combines the two search rankings without requiring their scores to use the same scale.
-- **Top-1 retrieval:** Passes the highest-ranked document to the answer generator to keep the context focused.
+The demonstration uses a synthetic, single-hospital insurance billing dataset.
 
-The retrieved document provides evidence for the LLM's response instead of relying only on its pretrained knowledge.
+| Dataset component | Records |
+|---|---:|
+| Patient records | 24 |
+| Insurance policies | 10 |
+| Total records across these two groups | 34 |
 
-## 7. Role of the Agent
+The patient records include claim information such as:
 
-The agent in `agent.py` decides how a question should be handled.
+- Claim ID and status
+- Claim processing stage
+- Pre-authorization status
+- Document verification status
+- Missing documents
+- Rejection reasons
+- Submission and approval dates
+- Insurance-covered and patient-payable amounts
 
-1. **Patient query:** Checks whether the patient's name or ID exists in the dataset before retrieving claim information.
-2. **Policy query:** Searches the available policy information.
-3. **General query:** Routes the question to the LLM without the patient/policy retrieval workflow.
+The insurance policy records contain information such as coverage, exclusions, claim timelines, and required documents.
 
-These checks help prevent the application from inventing records for unknown patients. They do not guarantee that every generated answer is correct.
+**Note:** This is a demonstration dataset, not a production hospital database.
 
-## 8. RAGAS Evaluation
+## 🔎 Example Questions
 
-RAGAS evaluates different aspects of the RAG pipeline.
+Users can ask questions such as:
+
+**Patient and claim queries**
+- What is the claim status for Arjun Malhotra?
+- What is the claim status for Rahul Sethi?
+- What documents are missing for Vivek Anand?
+- Why was Pooja Shah's claim rejected?
+
+**Insurance policy queries**
+- What documents are required for a cardiac procedure claim?
+- Which treatments are covered under a policy?
+- What exclusions apply to the insurance policy?
+
+**Unknown patient handling**
+- What is the claim status for Alex Unknown?
+
+When a patient cannot be found, the application should indicate that the record is unavailable instead of inventing a claim status.
+
+## 🧪 RAGAS Evaluation
+
+RAGAS (Retrieval-Augmented Generation Assessment) is used to evaluate the quality of the RAG pipeline.
+
+The project evaluates four metrics.
 
 | Metric | What it measures |
 |---|---|
-| Context Precision | Whether the retrieved context contains relevant information near the top of the results. |
-| Context Recall | Whether the retrieved context contains the information needed for the reference answer. |
-| Faithfulness | Whether the generated answer is supported by the retrieved context. |
-| Answer Correctness | How closely the generated answer matches the reference answer in meaning and factual content. |
+| Context Precision | Whether retrieved context is relevant to the question |
+| Context Recall | Whether the retrieved context contains the information needed to answer the question |
+| Faithfulness | Whether the generated answer is supported by the retrieved context |
+| Answer Correctness | How closely the generated answer matches the reference answer |
 
-### Current evaluation status
+### Initial Evaluation Results
 
-The current evaluation uses five selected patient test cases. The last recorded results were:
+The initial evaluation used five patient claim-status questions.
 
-| Metric | Average score | Completed scores |
-|---|---:|---:|
-| Context Precision | 1.000 | 5/5 |
-| Context Recall | 1.000 | 5/5 |
-| Faithfulness | 1.000 | 5/5 |
-| Answer Correctness | 0.930 | 4/5 |
+| Metric | Recorded result |
+|---|---:|
+| Context Precision | Approximately 1.000 |
+| Context Recall | 1.000 |
+| Faithfulness | 1.000 |
+| Average Answer Correctness | 0.9436 (94.36%) |
 
-**Status:** The evaluation is not yet complete. One Answer Correctness score was pending because the Gemini API daily quota was reached. These results are preliminary and apply only to the selected test cases; they do not establish performance across all 24 patients.
+**Evaluation scope:** Five questions covering the claim status of five patients.
 
-## 9. How to Run the Project
+The average Answer Correctness is calculated from the five saved scores, including the final score for Rohan Kapoor.
 
-### Step 1: Clone the repository
+These values represent the initial evaluation dataset and should not be interpreted as guaranteed performance on unseen questions.
+
+### Functional Testing
+
+Additional manual tests were performed through the deployed application.
+
+| Test case | Observed result |
+|---|---|
+| Rejected claim — Pooja Shah | Identified the missing pre-authorization confirmation |
+| Unknown patient — Alex Unknown | Reported that the patient could not be found |
+
+Both observed responses matched the expected behavior for these test cases.
+
+These manual tests are separate from the five-question RAGAS evaluation. Their results have not been added to the RAGAS metrics.
+
+### Evaluation Files
+
+- `evaluate_rag.py` — runs the RAGAS evaluation workflow.
+- `ragas_results.json` — stores the saved evaluation scores.
+
+The evaluation workflow uses an LLM and embeddings for metric calculation. API availability, quota limits, and model compatibility can affect whether an evaluation run completes.
+
+## ⚙️ Local Installation
+
+### Prerequisites
+
+- Python installed on your system
+- Git
+- A terminal such as PowerShell
+- Required model files or internet access for downloading models
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/sarika-845/medi-clear-ai.git
 cd medi-clear-ai
 ```
 
-### Step 2: Create a virtual environment
+### 2. Create a virtual environment
 
-```bash
-python -m venv venv
-```
-
-Activate it on Windows:
+Windows PowerShell:
 
 ```powershell
+python -m venv venv
 .\venv\Scripts\Activate.ps1
-```
 
-### Step 3: Install dependencies
+### 3. Install dependencies
 
-```bash
 pip install -r requirements.txt
-```
-
-### Step 4: Launch the application
-
-```bash
+### 4. Run the application
 streamlit run app.py
-```
 
-Streamlit will provide a local URL to open the application in your browser.
+Streamlit will provide a local URL in the terminal. Open that URL in your browser.
 
-**For RAGAS evaluation:** Configure the required Gemini API key as an environment variable named `GOOGLE_API_KEY`, then run:
+*Run these commands from the directory containing `app.py` and `requirements.txt`. If your cloned repository has a different folder structure, navigate to the appropriate directory first.*
 
-```bash
-python evaluate_rag.py
-```
+## 🔐 Configuration and Security
 
-Keep API keys private. Never commit them to GitHub.
+- Do not commit API keys, tokens, passwords, or private credentials.
+- Store required API keys in environment variables or the deployment platform's secrets manager.
+- Keep `venv/` and Python cache files out of version control.
+- Use synthetic or properly anonymized data for demonstrations.
+- Do not use this demonstration as the sole basis for real insurance or medical billing decisions.
 
-## 10. Example Questions
+## ⚠️ Current Limitations
 
-- What is the claim status for Aarav Mehta?
-- What is the claim status for patient ID 102?
-- What does the available insurance policy cover?
-- Can you explain how hybrid retrieval works in this application?
+- The current evaluation set contains only five questions.
+- Evaluation scores may not generalize to unseen questions.
+- Qdrant is configured for in-memory demonstration use; its index is not persistent across application restarts.
+- The application depends on the completeness and correctness of the supplied dataset.
+- Model availability, latency, API quotas, and dependency versions may affect performance.
+- Further testing is needed before considering the application production-ready.
 
-Use names, IDs, and policies that actually exist in the sample dataset when testing factual questions.
 
-## 11. Limitations and Future Improvements
 
-- Expand the evaluation beyond the five selected patients.
-- Complete the pending RAGAS score and report the final results.
-- Improve handling of ambiguous questions and multiple matching records.
-- Test retrieval and generation on more diverse questions.
-- Add monitoring, audit logging, access control, and privacy safeguards before any real-world healthcare use.
+## ⚠️ Challenges Faced
 
-## 12. Project Summary
+- **Retrieval Quality:** Combining BM25 and Qdrant for relevant results.
+- **LLM Response Quality:** Improving answer accuracy and relevance.
+- **API Rate Limits:** Switching to Groq when Gemini quota was exhausted.
+- **RAGAS Integration:** Resolving embedding compatibility and evaluating answer quality.
+- **Performance:** Managing model-loading time and response latency.
 
-MEDI CLEAR AI demonstrates how an agent, hybrid retrieval, a language model, and RAGAS evaluation can work together to answer questions about sample hospital billing and insurance data.
+## 🔮 Future Improvements
 
-The project combines information retrieval with language generation and includes validation safeguards to reduce unsupported patient-specific answers.
+- Expand RAGAS evaluation with more test cases.
+- Improve retrieval accuracy and answer generation.
+- Add persistent Qdrant storage.
+- Integrate Langfuse for tracing and monitoring.
+- Optimize response time and resource usage.
+- Strengthen testing, security, and data privacy.
 
-**Live application:** https://sarika-845-medi-clear-ai-app-a88k7p.streamlit.app
 
-**GitHub repository:** https://github.com/sarika-845/medi-clear-ai
+
+*MEDI CLEAR AI is an educational and demonstration project designed to explore Hybrid RAG, AI-assisted insurance verification, and RAG evaluation.*
+

@@ -1,310 +1,197 @@
 # 🏥 MEDI CLEAR AI
+# MEDI CLEAR AI — Hybrid RAG for Hospital Billing Verification
 
-### Hybrid RAG-Based Hospital Insurance & Billing Assistant
+## 1. Problem Statement
 
-MEDI CLEAR AI is a Generative AI application that helps users retrieve and understand hospital insurance and billing information using natural-language questions.
+Hospital billing teams must check patient records, insurance policies, and claim information before answering billing-related questions. Manually searching through these records takes time and can lead to errors.
 
-The system combines **BM25 keyword retrieval** and **Qdrant semantic vector search**, uses **Reciprocal Rank Fusion (RRF)** to combine the rankings, and passes the most relevant context to **Qwen2.5-3B-Instruct** to generate a concise answer.
+Traditional chatbots may also generate incorrect information when the required details are unavailable.
 
----
+## 2. Objective
 
-## 🎯 Problem Statement
+MEDI CLEAR AI is an AI-powered application that helps users retrieve patient claim information and insurance policy details through natural-language questions.
 
-Hospitals handle large amounts of patient billing and insurance information, including:
+The objectives are to:
+- Retrieve relevant information from a structured insurance dataset.
+- Combine keyword-based and semantic search for better retrieval.
+- Generate concise answers grounded in retrieved information.
+- Reduce unsupported answers by validating patient and policy information.
+- Evaluate answer quality using RAGAS metrics.
 
-- Patient billing details
-- Claim status
-- Claim stages
-- Insurance-covered amounts
-- Patient payable amounts
-- Missing documents
-- Policy coverage
-- Deductibles
-- Copay
-- Exclusions
-- Required documents
-- Claim timelines
+**Important:** This is a demonstration project using sample data, not a production hospital billing system.
 
-Finding the required information manually can be time-consuming.
-
-MEDI CLEAR AI provides a natural-language interface where users can simply ask a question and receive a relevant answer.
-
----
-
-## 💡 Objective
-
-The main objective of MEDI CLEAR AI is to:
-
-- Reduce manual searching of hospital insurance records
-- Retrieve relevant patient and policy information
-- Answer questions using natural language
-- Reduce hallucination by grounding answers in retrieved records
-- Demonstrate a practical Generative AI + RAG use case
-
----
-
-## 🧠 System Architecture
+## 3. How the Project Works
 
 ```text
-                    USER QUESTION
-                         │
-                         ▼
-                 QUERY CLASSIFICATION
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-              ▼                     ▼
-       PATIENT / POLICY          GENERAL
-              │                     │
-              ▼                     ▼
-       ┌───────────────┐        Qwen2.5-3B
-       │ Hybrid Search │        Direct Answer
-       └───────┬───────┘
-               │
-       ┌───────┴────────┐
-       ▼                ▼
-     BM25             Qdrant
-   Keyword          Semantic
-   Search            Search
-       │                │
-       └───────┬────────┘
-               ▼
-             RRF
-    Reciprocal Rank Fusion
-               │
-               ▼
-             TOP 1
-               │
-               ▼
-       Qwen2.5-3B-Instruct
-               │
-               ▼
-          FINAL ANSWER
+User asks a question
+        ↓
+    Streamlit UI
+        ↓
+      agent.py
+        ↓
+ Classify the question
+        ↓
+ ┌───────────────┬───────────────┐
+ │ Patient/Policy│ General Query │
+ ↓               ↓
+ Validate        Direct LLM
+ required data   response
+ ↓
+ Hybrid Search
+ BM25 + Qdrant
+ ↓
+ RRF Ranking
+ ↓
+ Retrieve Top 1
+ relevant document
+ ↓
+ Qwen2.5 LLM
+ ↓
+ Clean answer
+        ↓
+ Display in Streamlit
+```
 
+RAGAS evaluation is a separate process. It measures answer quality using test questions, reference answers, retrieved context, and generated answers.
 
+## 4. Project Files and Why We Use Them
 
+| File | Purpose |
+|---|---|
+| `app.py` | Provides the Streamlit user interface where users enter questions and view answers. |
+| `agent.py` | Classifies questions, validates patient information, and routes requests to the appropriate workflow. |
+| `RAG.py` | Implements hybrid retrieval, document ranking, and LLM-based answer generation. |
+| `insurance_dataset.json` | Stores the sample patient, claim, and insurance policy information used by the application. |
+| `evaluate_rag.py` | Runs the RAGAS evaluation on selected test cases. |
+| `ragas_results.json` | Stores completed evaluation scores so the evaluation can resume without discarding previous results. |
+| `requirements.txt` | Lists the Python packages required to run the project. |
+| `.gitignore` | Prevents unnecessary files, such as virtual environments and local secrets, from being committed to GitHub. |
 
+## 5. Technologies Used
 
-## 🔎 Hybrid RAG
+| Technology | Why it is used |
+|---|---|
+| Python | Implements the application logic. |
+| Streamlit | Creates the interactive web interface. |
+| BM25 | Finds documents using exact words and keyword relevance. |
+| Qdrant | Stores and searches vector representations of documents. |
+| Sentence Transformers | Converts text into numerical embeddings for semantic search. |
+| Reciprocal Rank Fusion (RRF) | Combines the rankings from BM25 and Qdrant into one ranked list. |
+| Qwen2.5-0.5B-Instruct | Generates natural-language answers using the retrieved context. |
+| RAGAS | Evaluates retrieval quality and answer quality. |
+| GitHub and Streamlit Cloud | Store the source code and host the web application. |
 
-MEDI CLEAR AI uses a hybrid retrieval approach.
+## 6. Why Hybrid RAG?
 
-BM25
+A single search method has limitations.
 
-BM25 performs keyword-based retrieval.
+- **BM25 — Keyword search:** Works well when the question contains an exact patient name, ID, claim term, or policy keyword.
+- **Qdrant — Semantic search:** Finds conceptually related text even when the wording differs.
+- **RRF — Rank fusion:** Combines the two search rankings without requiring their scores to use the same scale.
+- **Top-1 retrieval:** Passes the highest-ranked document to the answer generator to keep the context focused.
 
-It is useful for exact terms such as:
+The retrieved document provides evidence for the LLM's response instead of relying only on its pretrained knowledge.
 
-Patient names
-Patient IDs
-Policy IDs
-Claim IDs
-Insurance terminology
-Qdrant
+## 7. Role of the Agent
 
-Qdrant is used as the vector database.
+The agent in `agent.py` decides how a question should be handled.
 
-The project uses the:
+1. **Patient query:** Checks whether the patient's name or ID exists in the dataset before retrieving claim information.
+2. **Policy query:** Searches the available policy information.
+3. **General query:** Routes the question to the LLM without the patient/policy retrieval workflow.
 
-all-MiniLM-L6-v2
+These checks help prevent the application from inventing records for unknown patients. They do not guarantee that every generated answer is correct.
 
-Sentence Transformer model to generate vector embeddings.
+## 8. RAGAS Evaluation
 
-This allows the system to retrieve information based on semantic similarity rather than only exact keyword matches.
+RAGAS evaluates different aspects of the RAG pipeline.
 
-Reciprocal Rank Fusion
+| Metric | What it measures |
+|---|---|
+| Context Precision | Whether the retrieved context contains relevant information near the top of the results. |
+| Context Recall | Whether the retrieved context contains the information needed for the reference answer. |
+| Faithfulness | Whether the generated answer is supported by the retrieved context. |
+| Answer Correctness | How closely the generated answer matches the reference answer in meaning and factual content. |
 
-The BM25 and Qdrant rankings are combined using Reciprocal Rank Fusion (RRF).
+### Current evaluation status
 
-The highest-ranked document after fusion is selected as the Top-1 context.
+The current evaluation uses five selected patient test cases. The last recorded results were:
 
-## 🤖 Large Language Model
+| Metric | Average score | Completed scores |
+|---|---:|---:|
+| Context Precision | 1.000 | 5/5 |
+| Context Recall | 1.000 | 5/5 |
+| Faithfulness | 1.000 | 5/5 |
+| Answer Correctness | 0.930 | 4/5 |
 
-The project uses:
+**Status:** The evaluation is not yet complete. One Answer Correctness score was pending because the Gemini API daily quota was reached. These results are preliminary and apply only to the selected test cases; they do not establish performance across all 24 patients.
 
-Qwen/Qwen2.5-3B-Instruct
+## 9. How to Run the Project
 
-The model generates the final natural-language response using the retrieved context.
+### Step 1: Clone the repository
 
-For patient and policy questions, the model is instructed to:
-
-Use only the retrieved information
-Avoid inventing information
-Provide a short and direct response
-
-For general insurance questions, the system directly uses Qwen without retrieving patient records.
-
-
-## 🔄 RAG Workflow
-User Question
-      ↓
-Query Classification
-      ↓
-Patient / Policy / General
-      ↓
-Patient or Policy
-      ↓
-BM25 + Qdrant
-      ↓
-RRF Ranking
-      ↓
-Top-1 Document
-      ↓
-Qwen2.5-3B-Instruct
-      ↓
-Clean Answer
-
-## 🗂️ Dataset
-
-The project uses a JSON-based dataset containing:
-
-Patient Information
-Patient ID
-Patient name
-Treatment
-Policy ID
-Total bill
-Claim status
-Claim stage
-Insurance-covered amount
-Patient payable amount
-Missing documents
-Policy Information
-Policy ID
-Policy name
-Coverage limit
-Reimbursement percentage
-Deductible
-Copay
-Room rent limit
-Covered treatments
-Exclusions
-Required documents
-Claim timeline
-
-The dataset is intended for demonstration and development purposes.
-
-# 💬 Example Questions
-Patient Queries
-What is the claim status for Priya Sharma?
-
-What is Priya Sharma's total bill?
-
-How much does Priya Sharma need to pay?
-
-How much of Priya Sharma's bill is covered by insurance?
-
-Are any documents missing for Priya Sharma's claim?
-Policy Queries
-What is the deductible for POL002?
-
-What is the coverage limit for POL002?
-
-What is the copay percentage for POL002?
-
-What treatments are covered under POL002?
-
-What are the exclusions under POL002?
-
-What documents are required for maternity claims?
-General Questions
-What is a health insurance deductible?
-
-What is copay in health insurance?
-
-What does claim pending mean?
-
-What is reimbursement in health insurance?
-## 🛠️ Technologies Used
-Technology	Purpose
-Python	Core development
-Streamlit	Web application
-Qwen2.5-3B-Instruct	Answer generation
-Hugging Face Transformers	LLM implementation
-Sentence Transformers	Text embeddings
-all-MiniLM-L6-v2	Embedding model
-Qdrant	Vector database
-BM25	Keyword retrieval
-RRF	Hybrid ranking
-PyTorch	Model inference
-JSON	Dataset storage
-📁 Project Structure
-medi-clear-ai/
-│
-├── app.py
-├── RAG.py
-├── insurance_dataset.json
-├── requirements.txt
-├── README.md
-├── .gitignore
-│
-└── venv/              # Not uploaded to GitHub
-⚙️ Installation
-
-Clone the repository:
-
+```bash
 git clone https://github.com/sarika-845/medi-clear-ai.git
-
-Navigate into the project:
-
 cd medi-clear-ai
+```
 
-Create a virtual environment:
+### Step 2: Create a virtual environment
 
+```bash
 python -m venv venv
+```
 
-Activate the environment on Windows:
+Activate it on Windows:
 
-venv\Scripts\activate
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-Install dependencies:
+### Step 3: Install dependencies
 
+```bash
 pip install -r requirements.txt
-▶️ Run the Application
+```
 
-Start the Streamlit application:
+### Step 4: Launch the application
 
-python -m streamlit run app.py
+```bash
+streamlit run app.py
+```
 
-The application will open in your browser.
+Streamlit will provide a local URL to open the application in your browser.
 
-🧪 Testing
+**For RAGAS evaluation:** Configure the required Gemini API key as an environment variable named `GOOGLE_API_KEY`, then run:
 
-The system can be tested using:
+```bash
+python evaluate_rag.py
+```
 
-Patient-specific questions
-Policy-specific questions
-General insurance questions
-Unknown patient/policy queries
+Keep API keys private. Never commit them to GitHub.
 
-The application is designed to avoid generating patient-specific information when it is not present in the available records.
+## 10. Example Questions
 
-## 🚀 Future Improvements
+- What is the claim status for Aarav Mehta?
+- What is the claim status for patient ID 102?
+- What does the available insurance policy cover?
+- Can you explain how hybrid retrieval works in this application?
 
-Possible future improvements include:
+Use names, IDs, and policies that actually exist in the sample dataset when testing factual questions.
 
-PDF insurance document ingestion
-Automatic document chunking
-Larger production-scale datasets
-Conversation memory
-Authentication and role-based access
-Hospital staff dashboard
-Claim document verification
-Advanced RAG evaluation
-Response confidence scoring
-Cloud deployment
-GPU-based inference optimization
-👨‍💻 Project Highlights
+## 11. Limitations and Future Improvements
 
-This project demonstrates practical implementation of:
+- Expand the evaluation beyond the five selected patients.
+- Complete the pending RAGAS score and report the final results.
+- Improve handling of ambiguous questions and multiple matching records.
+- Test retrieval and generation on more diverse questions.
+- Add monitoring, audit logging, access control, and privacy safeguards before any real-world healthcare use.
 
-Generative AI
-Retrieval-Augmented Generation (RAG)
-Hybrid Search
-BM25 Retrieval
-Vector Search
-Qdrant
-Sentence Transformers
-Reciprocal Rank Fusion
-LLM-based Answer Generation
-Streamlit Application Development
+## 12. Project Summary
+
+MEDI CLEAR AI demonstrates how an agent, hybrid retrieval, a language model, and RAGAS evaluation can work together to answer questions about sample hospital billing and insurance data.
+
+The project combines information retrieval with language generation and includes validation safeguards to reduce unsupported patient-specific answers.
+
+**Live application:** https://sarika-845-medi-clear-ai-app-a88k7p.streamlit.app
+
+**GitHub repository:** https://github.com/sarika-845/medi-clear-ai

@@ -1,9 +1,13 @@
-
 import os
 import json
 import asyncio
 
-from openai import AsyncOpenAI
+from openai import (
+    AsyncOpenAI,
+    APIStatusError,
+    APITimeoutError,
+    APIConnectionError,
+)
 from google import genai
 
 from ragas.llms import llm_factory
@@ -19,23 +23,33 @@ from RAG import hybrid_search, generate_answer
 
 
 # --------------------------------------------------
-# GEMINI SETUP
+# CONFIGURATION
 # --------------------------------------------------
 
-API_KEY = os.environ.get("GOOGLE_API_KEY")
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
 if not API_KEY:
     raise ValueError(
-        "GOOGLE_API_KEY is missing. Configure it in your terminal."
+        "GOOGLE_API_KEY is missing. Set it in your terminal."
     )
 
-OUTPUT_FILE = "ragas_results.json"
 DATASET_FILE = "insurance_dataset.json"
+OUTPUT_FILE = "ragas_results.json"
+
+# Start with five patients. Increase to 24 after this run.
+MAX_PATIENTS = 5
+
+METRIC_NAMES = [
+    "context_precision",
+    "context_recall",
+    "faithfulness",
+    "answer_correctness",
+]
 
 client = AsyncOpenAI(
     api_key=API_KEY,
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    timeout=60,
+    timeout=90.0,
     max_retries=0,
 )
 
@@ -53,11 +67,6 @@ embeddings = GoogleEmbeddings(
     model="gemini-embedding-001",
 )
 
-
-# --------------------------------------------------
-# RAGAS METRICS
-# --------------------------------------------------
-
 metrics = {
     "context_precision": ContextPrecision(llm=llm),
     "context_recall": ContextRecall(llm=llm),
@@ -70,38 +79,132 @@ metrics = {
 
 
 # --------------------------------------------------
-# SAVE AND ERROR HANDLING
+# SAVE AND LOAD RESULTS
 # --------------------------------------------------
 
 def save_results(results):
-    """Save progress safely without overwriting with partial file data."""
-    temp_file = OUTPUT_FILE + ".tmp"
+    temporary_file = OUTPUT_FILE + ".tmp"
 
-    with open(temp_file, "w", encoding="utf-8") as file:
+    with open(temporary_file, "w", encoding="utf-8") as file:
         json.dump(results, file, indent=2, ensure_ascii=False)
 
-    os.replace(temp_file, OUTPUT_FILE)
+    os.replace(temporary_file, OUTPUT_FILE)
 
+
+def load_results():
+    if not os.path.exists(OUTPUT_FILE):
+        return []
+
+    with open(OUTPUT_FILE, "r", encoding="utf-8") as file:
+        results = json.load(file)
+
+    if not isinstance(results, list):
+        raise ValueError(
+            f"{OUTPUT_FILE} must contain a JSON list."
+        )
+
+    return results
+
+
+# --------------------------------------------------
+# ERROR HANDLING
+# --------------------------------------------------
 
 def is_temporary_api_error(error):
-    """Identify quota, rate-limit, and temporary server errors."""
     message = str(error).lower()
 
+    if isinstance(error, (APITimeoutError, APIConnectionError)):
+        return True
+
+    if isinstance(error, APIStatusError):
+        if error.status_code in (408, 429, 500, 502, 503, 504):
+            return True
+
     return any(
-        term in message
-        for term in (
+        text in message
+        for text in (
+            "408",
             "429",
+            "500",
+            "502",
             "503",
+            "504",
+            "timeout",
+            "timed out",
+            "readtimeout",
             "unavailable",
             "high demand",
             "quota",
             "resource_exhausted",
             "rate limit",
-            "500",
-            "502",
-            "504",
-            "internal server error",
         )
+    )
+
+
+async def evaluate_with_retry(metric_name, **kwargs):
+    for attempt in range(3):
+        try:
+            return await asyncio.wait_for(
+                metrics[metric_name].ascore(**kwargs),
+                timeout=100,
+            )
+
+        except Exception as error:
+            temporary = (
+                is_temporary_api_error(error)
+                or isinstance(error, asyncio.TimeoutError)
+            )
+
+            if not temporary or attempt == 2:
+                raise
+
+            delay = 10 * (2 ** attempt)
+
+            print(
+                f"Temporary failure in {metric_name}: {error}",
+                flush=True,
+            )
+            print(
+                f"Retrying in {delay} seconds "
+                f"(attempt {attempt + 2}/3)...",
+                flush=True,
+            )
+
+            await asyncio.sleep(delay)
+
+
+# --------------------------------------------------
+# EVALUATE A SINGLE METRIC
+# --------------------------------------------------
+
+async def evaluate_metric(
+    name,
+    question,
+    answer,
+    context,
+    reference,
+):
+    if name in ("context_precision", "context_recall"):
+        return await evaluate_with_retry(
+            name,
+            user_input=question,
+            retrieved_contexts=[context],
+            reference=reference,
+        )
+
+    if name == "faithfulness":
+        return await evaluate_with_retry(
+            name,
+            user_input=question,
+            response=answer,
+            retrieved_contexts=[context],
+        )
+
+    return await evaluate_with_retry(
+        name,
+        user_input=question,
+        response=answer,
+        reference=reference,
     )
 
 
@@ -111,23 +214,14 @@ def is_temporary_api_error(error):
 
 async def main():
     with open(DATASET_FILE, "r", encoding="utf-8") as file:
-        data = json.load(file)
+        dataset = json.load(file)
 
-    patients = data["patients"]
+    patients = dataset["patients"][:MAX_PATIENTS]
 
-    # Load existing results so completed metrics are preserved.
-    results = []
+    results = load_results()
+    saved = {row["question"]: row for row in results}
 
-    if os.path.exists(OUTPUT_FILE):
-        with open(OUTPUT_FILE, "r", encoding="utf-8") as file:
-            results = json.load(file)
-
-    saved = {
-        row["question"]: row
-        for row in results
-    }
-
-    stopped_early = False
+    paused = False
 
     try:
         for index, patient in enumerate(patients, start=1):
@@ -145,7 +239,6 @@ async def main():
                 flush=True,
             )
 
-            # Reuse existing row if it was previously saved.
             row = saved.get(question)
 
             if row is None:
@@ -161,27 +254,27 @@ async def main():
                 results.append(row)
                 saved[question] = row
 
-            # Skip patients whose four metrics are complete.
+            for name in METRIC_NAMES:
+                row.setdefault(name, None)
+
             pending = [
                 name
-                for name in metrics
-                if row.get(name) is None
+                for name in METRIC_NAMES
+                if row[name] is None
             ]
 
             if not pending:
-                print("All metrics completed. Skipping patient.")
+                print("All four metrics already complete. Skipping.")
                 continue
 
-            # Retrieve context for any unfinished metrics.
             try:
                 context = hybrid_search(question)
 
                 if not context:
-                    print("No context found. Skipping patient.")
+                    print("No context retrieved; skipping this patient.")
                     save_results(results)
                     continue
 
-                # Generate the answer only if it is not already saved.
                 if not row.get("answer"):
                     row["answer"] = generate_answer(
                         question,
@@ -190,50 +283,30 @@ async def main():
                     save_results(results)
 
             except Exception as error:
-                print(f"Retrieval or answer generation failed: {error}")
                 save_results(results)
+                print(f"Retrieval or generation failed: {error}")
 
                 if is_temporary_api_error(error):
-                    stopped_early = True
-                    print("Temporary API problem. Stopping safely.")
+                    paused = True
                     break
 
                 raise
 
             print(f"Answer: {row['answer']}")
 
-            # Evaluate only missing metrics.
             for name in pending:
                 print(f"Evaluating {name}...", flush=True)
 
                 try:
-                    if name in (
-                        "context_precision",
-                        "context_recall",
-                    ):
-                        score = await metrics[name].ascore(
-                            user_input=question,
-                            retrieved_contexts=[context],
-                            reference=reference,
-                        )
-
-                    elif name == "faithfulness":
-                        score = await metrics[name].ascore(
-                            user_input=question,
-                            response=row["answer"],
-                            retrieved_contexts=[context],
-                        )
-
-                    else:
-                        score = await metrics[name].ascore(
-                            user_input=question,
-                            response=row["answer"],
-                            reference=reference,
-                        )
+                    score = await evaluate_metric(
+                        name,
+                        question,
+                        row["answer"],
+                        context,
+                        reference,
+                    )
 
                     row[name] = float(score.value)
-
-                    # Persist each successful metric immediately.
                     save_results(results)
 
                     print(
@@ -242,31 +315,34 @@ async def main():
                     )
 
                 except Exception as error:
-                    # Preserve all successful scores.
                     save_results(results)
 
                     print(
-                        f"Evaluation failed for {name}: {error}",
+                        f"Could not complete {name}: {error}",
                         flush=True,
                     )
 
-                    if is_temporary_api_error(error):
-                        stopped_early = True
+                    if (
+                        is_temporary_api_error(error)
+                        or isinstance(error, asyncio.TimeoutError)
+                    ):
                         print(
-                            "Gemini quota or temporary service limit "
-                            "reached. Saved progress is preserved.",
+                            "Temporary API failure. "
+                            "Completed scores have been saved.",
                             flush=True,
                         )
+                        paused = True
                         break
 
                     raise
 
-            if stopped_early:
+            if paused:
                 break
 
     finally:
         save_results(results)
         await client.close()
+        embedding_client.close()
 
     # --------------------------------------------------
     # SUMMARY
@@ -276,7 +352,7 @@ async def main():
     print("MEDI CLEAR AI - RAGAS EVALUATION SUMMARY")
     print("=" * 50)
 
-    for name in metrics:
+    for name in METRIC_NAMES:
         scores = [
             row[name]
             for row in results
@@ -292,27 +368,33 @@ async def main():
         else:
             print(f"{name}: No completed scores")
 
-    completed_patients = sum(
-        all(row.get(name) is not None for name in metrics)
+    selected_questions = {
+        f"What is the claim status for {p['name']}?"
+        for p in patients
+    }
+
+    selected_rows = [
+        row
         for row in results
+        if row["question"] in selected_questions
+    ]
+
+    fully_evaluated = sum(
+        all(row.get(name) is not None for name in METRIC_NAMES)
+        for row in selected_rows
     )
 
-    print(f"\nPatients with all four metrics: {completed_patients}")
-    print(f"Patients with saved results: {len(results)}")
+    print(f"\nSelected patients: {len(patients)}")
+    print(f"Patients with saved results: {len(selected_rows)}")
+    print(f"Fully evaluated patients: {fully_evaluated}")
     print(f"Results saved in: {OUTPUT_FILE}")
 
-    if stopped_early:
-        print(
-            "Evaluation paused due to a temporary API problem. "
-            "Run again later to resume unfinished metrics."
-        )
-    elif completed_patients == len(patients):
-        print("All patient evaluations completed.")
+    if paused:
+        print("Evaluation paused. Run again to resume.")
+    elif fully_evaluated == len(patients):
+        print("All selected patient evaluations completed.")
     else:
-        print(
-            "Evaluation finished with some metrics still pending. "
-            "Run again later to resume."
-        )
+        print("Some metrics remain pending. Run again to resume.")
 
 
 if __name__ == "__main__":
